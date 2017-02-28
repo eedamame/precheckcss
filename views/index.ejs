@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+</head>
+<body>
+
+<div id="app-precheck">
+  <h1>セレクタリスト</h1>
+
+	<ul>
+		<li v-for="selectorItem in selectorList">{{selectorItem.selector}}
+			<ul>
+				<li>mediaquery内？ {{selectorItem.atrule}}</li>
+				<li>ファイル名: {{selectorItem.file}}</li>
+				<li>開始行: {{selectorItem.line}}</li>
+			</ul>
+		</li>
+	</ul>
+
+</div>
+
+<script src="https://unpkg.com/vue@2.2.1/dist/vue.min.js"></script>
+<script src="js/index.js"></script>
+</body>
+</html>

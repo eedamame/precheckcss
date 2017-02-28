@@ -3,11 +3,20 @@ const postcss = require('postcss');
 const util = require('util');
 const fs = require('fs');
 const glob = require('glob');
+const express = require('express');
+
+const app = express();
+
+const server = app.listen(3000, function() {
+  console.log("Node.js is listening to PORT:" + server.address().port);
+  console.log("check -> http://localhost:" + server.address().port);
+});
+
 
 // セレクタ情報突っ込む配列
-var check = [];
+var selectorList = [];
 
-const targetFiles = './css/*.css';
+const targetFiles = './precheckitem/*.css';
 
 glob( targetFiles, function(err, files) {
   files.forEach(function(file) {
@@ -38,7 +47,7 @@ glob( targetFiles, function(err, files) {
               'atrule': thisAtRule
             }
             //console.log('L35 ruleItem: ', ruleItem);
-            check.push(ruleItem);
+            selectorList.push(ruleItem);
           }
         } else {
           ruleItem = {
@@ -48,7 +57,7 @@ glob( targetFiles, function(err, files) {
             'atrule': thisAtRule
           }
           //console.log('L43 ruleItem: ', ruleItem);
-          check.push(ruleItem);
+          selectorList.push(ruleItem);
         }
       }
     });
@@ -56,15 +65,41 @@ glob( targetFiles, function(err, files) {
   })
 
   // selectorのアルファベット順にソート
-  check.sort(function(a,b) {
+  selectorList.sort(function(a,b) {
     if(a.selector < b.selector) return -1;
     if(a.selector > b.selector) return 1;
     return 0;
   });
 
-  // ファイルに書き込み
-  fs.writeFile('writetest.txt', util.inspect(check) , function (err) {
-    console.log(err);
-  });
-
 });
+
+
+
+/* =============================================================================
+   API
+============================================================================= */
+
+// セレクターリストを取得するAPI
+app.get("/api/css/selector", function(req, res, next){
+    res.json(selectorList);
+});
+
+
+
+
+/* =============================================================================
+   views
+============================================================================= */
+
+// View EngineにEJSを指定。
+app.set('view engine', 'ejs');
+// assetsディレクトリ内を静的ファイルとして使用する
+app.use(express.static('assets'));
+
+// "/"へのGETリクエストでindex.ejsを表示
+app.get("/", function(req, res, next){
+  res.render("index", {});
+});
+
+
+
