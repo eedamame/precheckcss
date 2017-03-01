@@ -8,8 +8,32 @@ xhr.addEventListener("load", function(e){
   var precheck = new Vue({
     el: '#app-precheck',
     data: {
+      freetext: '',
       selectorList: selectorList
+    },
+
+    filters: {
+      filterPerson: function(name) {
+        // 適当なfilter処理
+        if (name == "hogetaro") {
+          return name;
+        }
+      }
+    },
+
+
+
+    computed: {
+      filteredList: function() {
+        var self = this;
+
+        // セレクタのフリーワードフィルタ
+        return self.selectorList.filter(function(item) {
+          return (item.selector.indexOf(self.freetext) != -1);
+        })
+      }
     }
+
   });
 
 });

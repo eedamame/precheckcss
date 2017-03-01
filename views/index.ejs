@@ -2,22 +2,63 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title></title>
+  <title>precheckcss</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+<style>
+/* ----------------------------------------------
+   日本語フォント
+---------------------------------------------- */
+@font-face {
+  font-family: "Customyugothicm";
+  font-weight: normal;
+  src: local("YuGothic-Medium"), // postscript name
+       local("Yu Gothic Medium"); // for Chrome
+}
+@font-face {
+  font-family: "CustomYuGothicM";
+  font-weight: bold;
+  src: local("YuGothic-Bold"), // Postscript name
+       local("Yu Gothic"); // for Chrome
+}
+body {
+  font-family: Helvetica, Arial, Verdana, Roboto, CustomYuGothicM, YuGothic, sans-serif;
+}
+
+			.layout-wrapper {
+				margin: auto;
+				max-width: 35em;
+			}
+			.layout-globalheader {
+				text-align: center;
+			}
+
+</style>
+
 </head>
 <body>
 
-<div id="app-precheck">
-  <h1>セレクタリスト</h1>
+<div class="layout-wrapper">
 
-	<ul>
-		<li v-for="selectorItem in selectorList">{{selectorItem.selector}}
-			<ul>
-				<li>mediaquery内？ {{selectorItem.atrule}}</li>
-				<li>ファイル名: {{selectorItem.file}}</li>
-				<li>開始行: {{selectorItem.line}}</li>
-			</ul>
-		</li>
-	</ul>
+	<header class="layout-globalheader">
+		<h1>precheckcss</h1>
+	</header>
+
+	<div id="app-precheck">
+
+		<p>セレクタ名の絞り込み: <input v-model="freetext" v-cloak></p>
+
+		<ul>
+			<li v-for="selectorItem in filteredList">{{selectorItem.selector}}
+				<ul>
+					<li>mediaquery内？ {{selectorItem.atrule}}</li>
+					<li>ファイル名: {{selectorItem.file}}</li>
+					<li>開始行: {{selectorItem.line}}</li>
+				</ul>
+			</li>
+		</ul>
+
+	</div>
 
 </div>
 
