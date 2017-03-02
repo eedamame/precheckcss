@@ -1,0 +1,32 @@
+/* ----------------------------------------------
+   日本語フォント
+---------------------------------------------- */
+@font-face {
+  font-family: "Customyugothicm";
+  font-weight: normal;
+  src: local("YuGothic-Medium"), // postscript name
+       local("Yu Gothic Medium"); // for Chrome
+}
+@font-face {
+  font-family: "CustomYuGothicM";
+  font-weight: bold;
+  src: local("YuGothic-Bold"), // Postscript name
+       local("Yu Gothic"); // for Chrome
+}
+body {
+  background-color: #f2f2f2;
+  font-family: Helvetica, Arial, Verdana, Roboto, CustomYuGothicM, YuGothic, sans-serif;
+}
+
+.layout- {
+
+  &wrapper {
+    margin: auto;
+    padding: 0 0 5em;
+    max-width: 35em;
+  }
+  &globalheader {
+    text-align: center;
+  }
+
+}

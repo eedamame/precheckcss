@@ -3,38 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>precheckcss</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-
-<style>
-/* ----------------------------------------------
-   日本語フォント
----------------------------------------------- */
-@font-face {
-  font-family: "Customyugothicm";
-  font-weight: normal;
-  src: local("YuGothic-Medium"), // postscript name
-       local("Yu Gothic Medium"); // for Chrome
-}
-@font-face {
-  font-family: "CustomYuGothicM";
-  font-weight: bold;
-  src: local("YuGothic-Bold"), // Postscript name
-       local("Yu Gothic"); // for Chrome
-}
-body {
-  font-family: Helvetica, Arial, Verdana, Roboto, CustomYuGothicM, YuGothic, sans-serif;
-}
-
-			.layout-wrapper {
-				margin: auto;
-				max-width: 35em;
-			}
-			.layout-globalheader {
-				text-align: center;
-			}
-
-</style>
-
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
@@ -46,17 +15,22 @@ body {
 
 	<div id="app-precheck">
 
-		<p>セレクタ名の絞り込み: <input v-model="freetext" v-cloak></p>
+		<p>filter by selector name: <input v-model="freetext"></p>
 
-		<ul>
-			<li v-for="selectorItem in filteredList">{{selectorItem.selector}}
-				<ul>
-					<li>mediaquery内？ {{selectorItem.atrule}}</li>
-					<li>ファイル名: {{selectorItem.file}}</li>
-					<li>開始行: {{selectorItem.line}}</li>
-				</ul>
-			</li>
-		</ul>
+		<div class="mod-selectorlist">
+
+			<div v-for="( selectorItem, index ) in displayList" class="mod-selectorlist__item" :class="{ 'is-duplicateselector': selectorItem.repeatNum > 1 }" v-cloak>
+				<p class="mod-selectorlist__selectorname">{{selectorItem.selector}}</p>
+				<div class="mod-selectorlist__detail">
+					<p v-if="selectorItem.atrule" class="mod-selectorlist__detail--atrule"><i class="fa fa-at" aria-hidden="true"></i> {{selectorItem.atrule}}</p>
+					<p>
+						<span class="mod-selectorlist__detail--filename"><i class="fa fa-file-o" aria-hidden="true"></i> {{selectorItem.file}}</span>
+						<span class="mod-selectorlist__detail--linenum"><i class="fa fa-code" aria-hidden="true"></i> L{{selectorItem.line}}</span>
+					</p>
+				</div>
+				<p v-if="selectorItem.repeatNum > 1" class="mod-selectorlist__duplicateselector">The same selector is specified {{selectorItem.repeatNum}} times</p>
+			</div>
+		</div>
 
 	</div>
 

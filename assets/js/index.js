@@ -22,15 +22,24 @@ xhr.addEventListener("load", function(e){
     },
 
 
-
     computed: {
-      filteredList: function() {
+      displayList: function() {
         var self = this;
-
         // セレクタのフリーワードフィルタ
-        return self.selectorList.filter(function(item) {
+        var fileteredList = self.selectorList.filter(function(item) {
           return (item.selector.indexOf(self.freetext) != -1);
         })
+        // selectorのアルファベット順にソート
+        var sortedList = fileteredList.sort(function(a,b) {
+          if(a.selector < b.selector) {
+            return -1;
+          }
+          if(a.selector > b.selector) {
+            return 1;
+          }
+          return 0;
+        });
+        return sortedList;
       }
     }
 

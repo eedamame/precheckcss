@@ -1,0 +1,186 @@
+/* =============================================================================
+   clearfix
+============================================================================= */
+@mixin clearfix {
+  *zoom: 1;
+  &:after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+}
+/* =============================================================================
+   media queries
+============================================================================= */
+// ブレイクポイントを設定
+// 参考： http://neutroncss.com/
+// ------------------------------------------
+// モバイル： 〜479px
+// ファブレット： 〜767px
+// タブレット： 〜1023px
+// 小さいデスクトップ： 〜1199px
+// デスクトップ（デフォルト）： 1200px〜
+// ------------------------------------------
+$mobile-max: 479px !default;
+$phablet-max: 767px !default;
+$tablet-max: 1023px !default;
+$desktop-sml-max: 1199px !default;
+
+$phablet-min: $mobile-max + 1 !default;
+$tablet-min: $phablet-max + 1 !default;
+$desktop-sml-min: $tablet-max + 1 !default;
+$desktop-min: $desktop-sml-max + 1 !default;
+
+
+@mixin media($mediaSize) {
+
+// ================================================
+// デフォルトスタイルがデスクトップの場合
+// ================================================
+
+  // mediaquery for small desktop
+  @if $mediaSize == desktop-s {
+    @media all and (max-width: $desktop-sml-max) {
+      @content
+    }
+  }
+
+  // mediaquery for tablet
+  @if $mediaSize == tablet {
+    @media all and (max-width: $tablet-max) {
+      @content
+    }
+  }
+
+  // mediaquery for phablet
+  @else if $mediaSize == phablet {
+    @media all and (max-width: $phablet-max) {
+      @content
+    }
+  }
+
+  // mediaquery for mobile
+  @else if $mediaSize == mobile {
+    @media all and (max-width: $mobile-max) {
+      @content
+    }
+  }
+
+// ================================================
+// デフォルトスタイルがモバイルの場合
+// ================================================
+// ------------------------------------------
+// モバイル（デフォルト）： 〜479px
+// ファブレット： 480px〜
+// タブレット： 768px〜
+// 小さいデスクトップ： 1024px〜
+// デスクトップ： 1200px〜
+// ------------------------------------------
+  // // mediaquery for phablet
+  // @else if $mediaSize == phablet {
+  //   @media all and (min-width: $phablet-min) {
+  //     @content
+  //   }
+  // }
+  //
+  // // mediaquery for tablet
+  // @if $mediaSize == tablet {
+  //   @media all and (max-width: $tablet-min) {
+  //     @content
+  //   }
+  // }
+  //
+  // // mediaquery for desktop small
+  // @if $mediaSize == desktop-s {
+  //   @media all and (max-width: $desktop-sml-min) {
+  //     @content
+  //   }
+  // }
+  //
+  // // mediaquery for desktop
+  // @if $mediaSize == desktop {
+  //   @media all and (max-width: $desktop-min) {
+  //     @content
+  //   }
+  // }
+
+}
+
+
+/* =============================================================================
+   list reset default style
+============================================================================= */
+@mixin resetListStyle {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+
+/* =============================================================================
+   opacity style
+============================================================================= */
+@mixin opacity06 {
+  opacity: .6;
+  filter: alpha(opacity=60);
+  -ms-filter: "alpha(opacity=60)";
+}
+@mixin opacity07 {
+  opacity: .7;
+  filter: alpha(opacity=70);
+  -ms-filter: "alpha(opacity=70)";
+}
+
+
+/* =============================================================================
+   sprite images
+   gulp.spritesmith の拡張
+============================================================================= */
+// デフォルトの使用
+// @include sprite($sprite-icon-key);
+
+/* カスタムサイズのスプライトイメージのためのメソッド群
+---------------------------------------------- */
+@mixin resize-sprite-width($sprite, $customRatio) {
+  width: round( nth($sprite, 5) * $customRatio );
+}
+@mixin resize-sprite-height($sprite, $customRatio) {
+  height: round( nth($sprite, 6) * $customRatio );
+}
+@mixin resize-sprite-position($sprite, $customRatio) {
+  $sprite-offset-x: round( nth($sprite, 3) * $customRatio );
+  $sprite-offset-y: round( nth($sprite, 4) * $customRatio );
+  background-position: $sprite-offset-x  $sprite-offset-y;
+}
+@mixin resize-sprite-size($sprite, $customRatio) {
+  $sprite-display-width: round( nth($spritesheet, 1) * $customRatio );
+  $sprite-display-height: round( nth($spritesheet, 2) * $customRatio );
+  background-size: $sprite-display-width $sprite-display-height;
+}
+
+/*
+ * 画像サイズとは違う大きさで表示させたい場合
+ * 22px は横幅
+ * @include resize-sprite($sprite-icon-key, 22px);
+---------------------------------------------- */
+@mixin resize-sprite($sprite, $customWidth) {
+  $customRatio: $customWidth / nth($sprite, 5); // nth($sprite, 5) はwidthを取得している
+  @include sprite-image($sprite);
+  @include resize-sprite-position($sprite, $customRatio);
+  @include resize-sprite-width($sprite, $customRatio);
+  @include resize-sprite-height($sprite, $customRatio);
+  @include resize-sprite-size($sprite, $customRatio);
+}
+
+/*
+ * カスタムサイズのスプライトイメージのサイズ指定のみ
+ * 10px は横幅
+ * @include get-sprite-size($sprite-icon-key, 10px);
+---------------------------------------------- */
+@mixin get-sprite-size($sprite, $customWidth) {
+  $customRatio: $customWidth / nth($sprite, 5); // nth($sprite, 5) はwidthを取得している
+  @include resize-sprite-position($sprite, $customRatio);
+  @include resize-sprite-width($sprite, $customRatio);
+  @include resize-sprite-height($sprite, $customRatio);
+  @include resize-sprite-size($sprite, $customRatio);
+}

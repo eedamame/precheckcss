@@ -1,0 +1,77 @@
+/* sprite ratina */
+@mixin ratina-sprite-width($sprite) {
+  width: nth($sprite, 5) / 2;
+}
+
+@mixin ratina-sprite-height($sprite) {
+  height: nth($sprite, 6) / 2;
+}
+
+@mixin ratina-sprite-position($sprite) {
+  $sprite-offset-x: nth($sprite, 3) / 2;
+  $sprite-offset-y: nth($sprite, 4) / 2;
+  background-position: $sprite-offset-x  $sprite-offset-y;
+}
+
+@mixin ratina-sprite-image($sprite) {
+  $sprite-image: nth($sprite, 9);
+  background-image: url(#{$sprite-image});
+}
+
+//background-sizeのmixinを新たに生成
+@mixin ratina-sprite-size($sprite) {
+  background-size: nth($sprite, 7)/2 nth($sprite, 8)/2;
+}
+
+@mixin ratinasprite($sprite) {
+  @include ratina-sprite-image($sprite);
+  @include ratina-sprite-position($sprite);
+  @include ratina-sprite-width($sprite);
+  @include ratina-sprite-height($sprite);
+  @include ratina-sprite-size($sprite);  //新たに作ったmixinの呼び出し
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+body {
+  padding: 0;
+  background: #fff;
+  line-height: $defaultLineHeight;
+  font-family: $defaultFontSet;
+  color: $textcolor;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+img {
+  line-height: 1;
+  font-size: 1em;
+  vertical-align: top;
+  @media only screen and (max-width: 767px) {
+    max-width: 100%;
+  }
+}
+a {
+  color: $linkTextColor;
+  text-decoration: underline;
+  &:hover {
+    text-decoration: none;
+  }
+  @media only screen and (max-width: 767px){
+    text-decoration: none;
+  }
+}
+h1,h2,h3 {
+  color: #121212;
+  p {
+    color: #121212;
+  }
+}
+p {
+  margin-top: 0;
+}
+th, td, li {
+  line-height: $defaultLineHeight;
+}

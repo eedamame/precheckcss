@@ -1,0 +1,13 @@
+{
+  "name": "precheckcss",
+  "version": "1.0.0",
+  "authors": [
+    "eedamame <eedamame@gmail.com>"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "normalize-css": "^4.2.0",
+    "font-awesome": "^4.6.3"
+  },
+  "devDependencies": {}
+}
