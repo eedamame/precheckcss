@@ -16,9 +16,16 @@
 	<div id="app-precheck">
 
 		<p>filter by selector name: <input v-model="freetext"></p>
+		<p>filter by file:
+			<select v-model="fileselect">
+				<option value="">all</option>
+				<template v-for="file in filelist">
+				<option>{{file}}</option>
+				</template>
+			</select>
+		</p>
 
 		<div class="mod-selectorlist">
-
 			<div v-for="( selectorItem, index ) in displayList" class="mod-selectorlist__item" :class="{ 'is-duplicateselector': selectorItem.repeatNum > 1 }" v-cloak>
 				<p class="mod-selectorlist__selectorname">{{selectorItem.selector}}</p>
 				<div class="mod-selectorlist__detail">

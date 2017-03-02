@@ -1,34 +1,32 @@
-var selectorList;
-
 var xhr = new XMLHttpRequest();
 xhr.open("GET","/api/css/selector");
 xhr.addEventListener("load", function(e){
+
   selectorList = JSON.parse(xhr.response);
 
   var precheck = new Vue({
     el: '#app-precheck',
     data: {
       freetext: '',
-      selectorList: selectorList
+      fileselect: '',
+      filelist: selectorList.files,
+      selectorList: selectorList.selectors
     },
-
-    filters: {
-      filterPerson: function(name) {
-        // 適当なfilter処理
-        if (name == "hogetaro") {
-          return name;
-        }
-      }
-    },
-
 
     computed: {
       displayList: function() {
         var self = this;
-        // セレクタのフリーワードフィルタ
         var fileteredList = self.selectorList.filter(function(item) {
-          return (item.selector.indexOf(self.freetext) != -1);
+          if(
+            // セレクタのフリーワードフィルタ
+            item.selector.indexOf(self.freetext) != -1
+            // ファイルのフィルタ
+            && item.file.indexOf(self.fileselect) != -1
+          ) {
+            return true;
+          }
         })
+
         // selectorのアルファベット順にソート
         var sortedList = fileteredList.sort(function(a,b) {
           if(a.selector < b.selector) {

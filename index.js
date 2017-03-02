@@ -13,9 +13,9 @@ const server = app.listen(3000, function() {
   console.log("check -> http://localhost:" + server.address().port);
 });
 
-// セレクタ情報突っ込む配列
-var selectorList = [];
-var numberingList = [];
+var selectorList = []; // セレクタ情報突っ込む配列
+var numberingList = []; // 重複カウント含む配列
+var targetFileList = []; // 使用するcssファイル名を突っ込む配列
 
 const targetFiles = './precheckitem/*.css';
 
@@ -23,6 +23,7 @@ glob( targetFiles, function(err, files) {
   files.forEach(function(file) {
     const css = fs.readFileSync(file);
     const root = postcss.parse(css);
+    targetFileList.push(file);
 
     root.walk(function (rule) {
       const slct = rule.selector;
@@ -59,14 +60,6 @@ glob( targetFiles, function(err, files) {
     });
   })
 
-
-  //// selectorのアルファベット順にソート
-  //selectorList.sort(function(a,b) {
-  //  if(a.selector < b.selector) return -1;
-  //  if(a.selector > b.selector) return 1;
-  //  return 0;
-  //});
-
   // セレクタ名でグルーピングしたオブジェクト
   var groupBySelector = _.groupBy(selectorList, 'selector')
 
@@ -76,31 +69,35 @@ glob( targetFiles, function(err, files) {
     numberingList.push(listitem);
   });
 
+  var returnData = {
+    files: targetFileList,
+    selectors: numberingList
+  };
+
+
+  /* =============================================================================
+     API
+  ============================================================================= */
+
+  // セレクターリストを取得するAPI
+  app.get("/api/css/selector", function(req, res, next){
+      //res.json(selectorList);
+      res.json(returnData);
+  });
+
+
+  /* =============================================================================
+     views
+  ============================================================================= */
+
+  // View EngineにEJSを指定。
+  app.set('view engine', 'ejs');
+  // assetsディレクトリ内を静的ファイルとして使用する
+  app.use(express.static('assets'));
+
+  // "/"へのGETリクエストでindex.ejsを表示
+  app.get("/", function(req, res, next){
+    res.render("index", {files: targetFileList});
+  });
+
 });
-
-
-/* =============================================================================
-   API
-============================================================================= */
-
-// セレクターリストを取得するAPI
-app.get("/api/css/selector", function(req, res, next){
-    //res.json(selectorList);
-    res.json(numberingList);
-});
-
-
-/* =============================================================================
-   views
-============================================================================= */
-
-// View EngineにEJSを指定。
-app.set('view engine', 'ejs');
-// assetsディレクトリ内を静的ファイルとして使用する
-app.use(express.static('assets'));
-
-// "/"へのGETリクエストでindex.ejsを表示
-app.get("/", function(req, res, next){
-  res.render("index", {});
-});
-
